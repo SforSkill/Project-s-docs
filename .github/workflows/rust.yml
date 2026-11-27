@@ -53,7 +53,7 @@ jobs:
   lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Bibliothèques système (Bevy)
         if: inputs.bevy
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
@@ -67,8 +67,8 @@ jobs:
   boundaries:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           repository: SforSkill/Project-s-docs
           ref: ${{ inputs.tools-ref }}
@@ -81,7 +81,7 @@ jobs:
   deny:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: EmbarkStudios/cargo-deny-action@v2
         with:
           command: check advisories bans licenses sources
@@ -95,8 +95,8 @@ jobs:
     env:
       PS_CONTENT_DIR: ${{ inputs.content && format('{0}/Project-s-content', github.workspace) || '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         if: inputs.content
         with:
           repository: SforSkill/Project-s-content
