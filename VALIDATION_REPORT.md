@@ -18,7 +18,7 @@ Référence avant migration : le monolithe `b586317`, tag `backup/pre-repo-split
 | Project-s-content v0.1.0 | 2 | 10 | respecté |
 | Project-s-engine v0.1.1 | 1 | 1 | respecté |
 | Project-s-server v0.2.0-alpha.1 | 2 | 13 | respecté |
-| Project-s (PR #9) | 2 | 16 | respecté |
+| Project-s | 2 | 16 | respecté |
 | Project-s-lab | 2 | 15 | respecté |
 
 **Test négatif.** On a ajouté `tokio*` aux paquets interdits de Project-s-server. Le script échoue alors et affiche le chemin `ps-server -> tokio -> tokio-macros` : il détecte donc les dépendances transitives.
@@ -46,7 +46,7 @@ Nombre de tests relevé dans les journaux de la CI de `main` :
 | Project-s-lab (privé) | verte, Linux seul (avec une série courte du netlab) | 7 | 0 | 0 |
 | Project-s-infra (privé) | verte : compose config ×4, helm lint, kubeconform, `systemd-analyze`, actionlint, gitleaks | — | — | — |
 | Project-s-docs | verte : liens, actionlint, Python | — | — | — |
-| Project-s, PR #9 | verte (avec le `--check` du client) | 10 / 10 | 0 | 0 |
+| Project-s (PR #9 fusionnée) | verte (avec le `--check` du client) | 10 / 10 | 0 | 0 |
 
 **Note sur le client.** Les 10 tests passent aussi en local (sans `[patch]`, en `--locked`), dont 4 tests de bout en bout entre `ps-netclient` et `ps-server` sur UDP réel et sur un lien dégradé simulé. `Project-S --check` affiche « données valides (3 cartes, empreinte 2aa9cbf7b64f57f0) ».
 
@@ -94,7 +94,7 @@ Même machine, exécutions successives :
 
 Aucun écart ne dépasse le bruit de mesure.
 
-Premier passage sans profil : +12,7 % sur `player_tick_128hz_stairs`. La cause est l'absence de `[profile.release]` dans le workspace de Project-s-simulation. Les binaires livrés ne sont pas touchés, car leur workspace a gardé le profil. Correction proposée : SforSkill/Project-s-simulation#1.
+Premier passage sans profil : +12,7 % sur `player_tick_128hz_stairs`. La cause est l'absence de `[profile.release]` dans le workspace de Project-s-simulation. Les binaires livrés ne sont pas touchés, car leur workspace a gardé le profil. Corrigé par SforSkill/Project-s-simulation#1 (fusionnée).
 
 ### Laboratoire réseau
 
@@ -135,7 +135,7 @@ Validé localement avec Docker 29.8.2 et Helm 3.18.3 :
 | Kubernetes et Agones | jamais déployés (aucun cluster, aucune autorisation) |
 | Environnements development, staging et production | fichiers créés ; aucun hôte réel testé |
 | Déploiement VPS du nouveau découpage | non refait : seul le baseline 0.1.0-alpha a été validé sur VPS |
-| Image `ghcr.io/sforskill/project-s-server` | non publiée : job ajouté par SforSkill/Project-s-server#1 (CI verte, jamais exécuté avant une release) ; l'infra utilise `--build` en attendant |
+| Image `ghcr.io/sforskill/project-s-server` | non publiée : job ajouté par SforSkill/Project-s-server#1 (fusionnée), il s'exécutera à la prochaine release du serveur ; l'infra utilise `--build` en attendant |
 | Release Please du lab et de l'infra | échoue : l'App de release (variable `RELEASE_APP_ID`, secret `RELEASE_APP_PRIVATE_KEY`) n'est pas accessible aux dépôts privés ; aucun tag ; changement de droits non effectué |
 | Copie `ps-lab-netclient` dans le lab | dette : à remplacer par une dépendance `tag` vers `ps-netclient` quand le client sera tagué |
 | Core, orchestrateur, anti-triche, admin | **non implémentés** : périmètres ([docs/planned/](docs/planned/)) et contrats (`ps-core-protocol`) seulement |
