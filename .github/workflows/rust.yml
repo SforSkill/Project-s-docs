@@ -73,7 +73,7 @@ jobs:
           repository: SforSkill/Project-s-docs
           ref: ${{ inputs.tools-ref }}
           path: .ps-docs
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: python .ps-docs/tools/check_boundaries.py .
