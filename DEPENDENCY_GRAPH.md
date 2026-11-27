@@ -57,13 +57,13 @@ flowchart BT
   srv --> sim & simnet & simcore & physics & hitreg & weapons & rules & transport & visibility
   check --> sim
   mapgen --> simcore & physics
-  netclient --> simnet & sim & transport
-  gameclient --> netclient & character & srv
+  netclient --> simcore & physics & movement & weapons & rules & sim & simnet & transport
+  gameclient --> simcore & physics & movement & weapons & hitreg & rules & sim & simnet & transport & srv & netclient & character
 ```
 
 `ps-client` dépend de la bibliothèque `ps-server` **sans** sa feature `admin` (sans tokio, axum ni Prometheus). C'est ce qui permet le jeu local : serveur embarqué sur 127.0.0.1, même code que le serveur dédié ([ADR 0007](docs/decisions/0007-multi-repository.md)). Le client ne dépend jamais du binaire dédié.
 
-Les dépendances exactes de `ps-netclient` et `ps-client` sont dans le `Cargo.toml` du dépôt Project-s.
+Arêtes = dépendances directes normales (relevées dans les `Cargo.toml` du 27/11/2026). `ps-netclient` ne dépend de `ps-server` qu'en dépendance de test, pour ses tests de bout en bout.
 
 ## Règles
 

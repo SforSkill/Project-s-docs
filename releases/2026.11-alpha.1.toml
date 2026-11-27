@@ -44,7 +44,7 @@ tag = "v0.2.0-alpha.1"
 
 [components.client]
 repo = "SforSkill/Project-s"
-pending = true               # PR refactor/repo-split ouverte ; tag après fusion et release
+pending = true               # PR SforSkill/Project-s#9 (refactor/repo-split) ouverte ; tag après fusion et release
 
 [components.docs]
 repo = "SforSkill/Project-s-docs"
@@ -53,11 +53,11 @@ tag = "v0.1.0"
 [components.lab]
 repo = "SforSkill/Project-s-lab"
 private = true
-pending = true
+pending = true               # tag bloqué : Release Please n'a pas accès au secret de l'App
 
 [components.infra]
 repo = "SforSkill/Project-s-infra"
 private = true
-pending = true
+pending = true               # même raison
 
 # Prévus, sans code : core, orchestrator, anticheat, admin, launcher, web.

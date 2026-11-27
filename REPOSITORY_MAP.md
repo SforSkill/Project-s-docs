@@ -12,8 +12,8 @@ Org GitHub : [`SforSkill`](https://github.com/SforSkill). L'état indiqué est c
 | [Project-s-server](https://github.com/SforSkill/Project-s-server) | public | Serveur dédié autoritaire headless | `ps-server` (lib sans E/S + boucle UDP + binaire `projet-s-server`), `ps-visibility` (PIM), `deploy/` (Docker, systemd) | publié v0.2.0-alpha.1 |
 | [Project-s-content](https://github.com/SforSkill/Project-s-content) | public | Contenu versionné | `configs/`, `maps/`, `manifests/content.toml`, `ps-content-check`, `tools/ps-mapgen` | publié v0.1.0 |
 | [Project-s-docs](https://github.com/SforSkill/Project-s-docs) | public | Documentation transversale et outillage commun | ce dépôt | publié v0.1.0 |
-| Project-s-lab | **privé** | Mesures, benchmarks, laboratoire réseau | laboratoire réseau (ex `tools/netlab`), résultats | créé |
-| Project-s-infra | **privé** | Description et déploiement de l'écosystème | Compose, systemd, Helm, Agones, monitoring | créé |
+| Project-s-lab | **privé** | Mesures, benchmarks, laboratoire réseau | laboratoire réseau (ex `tools/netlab`), résultats | créé ; pas de tag : Release Please n'a pas accès au secret de l'App |
+| Project-s-infra | **privé** | Description et déploiement de l'écosystème | Compose, systemd, Helm, Agones, monitoring | créé, CI verte ; pas de tag (même raison) ; rien déployé |
 | Project-s-core | privé (futur) | Comptes, sessions, matchmaking, cycle de vie des matchs, Trust, classement | — (contrats dans `ps-core-protocol`) | prévu : [docs/planned/core.md](docs/planned/core.md) |
 | Project-s-orchestrator | privé (futur) | Machines et instances de serveurs de jeu | — | prévu : [docs/planned/orchestrator.md](docs/planned/orchestrator.md) |
 | Project-s-anticheat | privé (futur) | Détection et preuves | — | prévu : [docs/planned/anticheat.md](docs/planned/anticheat.md) |
