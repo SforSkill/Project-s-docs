@@ -1,0 +1,5 @@
+.git/ai-logs/
+__pycache__/
+.env
+*.pem
+*.key

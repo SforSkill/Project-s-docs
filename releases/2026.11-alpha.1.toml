@@ -1,0 +1,63 @@
+# Release globale de l'écosystème Project S.
+# Chaque composant est épinglé sur un tag immuable ; `tools/bootstrap.py --release`
+# clone chaque dépôt à ce tag. `pending = true` : composant pas encore tagué pour
+# cette release (le tag sera ajouté ici quand sa PR de release sera fusionnée).
+name = "2026.11-alpha.1"
+channel = "alpha"
+date = 2026-11-27
+status = "draft"
+
+[contracts]
+transport_version = 1        # ps-transport::TRANSPORT_VERSION
+game_protocol = 1            # ps-sim-net::proto::GAME_PROTOCOL
+protocol_version = "1.0"     # ps-types::PROTOCOL_VERSION
+ticket_version = 1           # ps-core-protocol::ticket::TICKET_VERSION
+envelope_version = 1         # ps-core-protocol::events::ENVELOPE_VERSION
+replay_format = 1            # ps-replay::FORMAT_VERSION
+content_manifest_format = 1
+data_fingerprint = "2aa9cbf7b64f57f0"
+
+[components.protocol]
+repo = "SforSkill/Project-s-protocol"
+tag = "v0.1.0"
+
+[components.netcode]
+repo = "SforSkill/Project-s-netcode"
+tag = "v0.1.0"
+
+[components.simulation]
+repo = "SforSkill/Project-s-simulation"
+tag = "v0.1.0"
+
+[components.engine]
+repo = "SforSkill/Project-s-engine"
+tag = "v0.1.1"
+
+[components.content]
+repo = "SforSkill/Project-s-content"
+tag = "v0.1.0"
+configs = "0.1.0"            # manifests/content.toml : version
+
+[components.server]
+repo = "SforSkill/Project-s-server"
+tag = "v0.2.0-alpha.1"
+
+[components.client]
+repo = "SforSkill/Project-s"
+pending = true               # PR refactor/repo-split ouverte ; tag après fusion et release
+
+[components.docs]
+repo = "SforSkill/Project-s-docs"
+tag = "v0.1.0"
+
+[components.lab]
+repo = "SforSkill/Project-s-lab"
+private = true
+pending = true
+
+[components.infra]
+repo = "SforSkill/Project-s-infra"
+private = true
+pending = true
+
+# Prévus, sans code : core, orchestrator, anticheat, admin, launcher, web.

@@ -1,0 +1,114 @@
+# CI commune des dépôts Rust de Project S (workflow réutilisable).
+#
+# Appel depuis un dépôt :
+#   jobs:
+#     rust:
+#       uses: SforSkill/Project-s-docs/.github/workflows/rust.yml@v0.1.0
+#       with:
+#         tools-ref: v0.1.0      # même tag que ci-dessus : version de check_boundaries.py
+#         content: true          # tests qui lisent configs/ et maps/
+#         bevy: true             # bibliothèques système de Bevy (Linux)
+#         extra: "cargo run ..." # commande supplémentaire après les tests (Linux)
+#
+# Toujours épingler un tag, jamais @main : la CI d'un dépôt ne doit pas changer
+# sans commit dans ce dépôt (VERSIONING.md).
+name: Rust (réutilisable)
+
+on:
+  workflow_call:
+    inputs:
+      tools-ref:
+        description: Tag de Project-s-docs qui fournit tools/check_boundaries.py
+        type: string
+        required: true
+      content:
+        description: Récupère Project-s-content et exporte PS_CONTENT_DIR
+        type: boolean
+        default: false
+      content-ref:
+        description: Tag de Project-s-content à utiliser
+        type: string
+        default: v0.1.0
+      bevy:
+        description: Installe les bibliothèques système de Bevy (alsa, udev, wayland, xkbcommon)
+        type: boolean
+        default: false
+      extra:
+        description: Commande lancée après les tests sur Linux (bash)
+        type: string
+        default: ""
+      windows:
+        description: Lance aussi les tests sur Windows
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bibliothèques système (Bevy)
+        if: inputs.bevy
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
+      - run: rustup show active-toolchain
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - name: Documentation
+        run: cargo doc --workspace --no-deps --all-features --locked
+
+  boundaries:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: SforSkill/Project-s-docs
+          ref: ${{ inputs.tools-ref }}
+          path: .ps-docs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .ps-docs/tools/check_boundaries.py .
+
+  deny:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check advisories bans licenses sources
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ inputs.windows && fromJSON('["ubuntu-22.04", "windows-latest"]') || fromJSON('["ubuntu-22.04"]') }}
+    runs-on: ${{ matrix.os }}
+    env:
+      PS_CONTENT_DIR: ${{ inputs.content && format('{0}/Project-s-content', github.workspace) || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        if: inputs.content
+        with:
+          repository: SforSkill/Project-s-content
+          ref: ${{ inputs.content-ref }}
+          path: Project-s-content
+      - name: Bibliothèques système (Bevy)
+        if: inputs.bevy && runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
+      - uses: Swatinem/rust-cache@v2
+      # Profil release : les tests de simulation (parties de bots, labo réseau) sont lents en debug.
+      - run: cargo test --workspace --all-features --release --locked
+      - name: Commande supplémentaire
+        if: inputs.extra != '' && runner.os == 'Linux'
+        shell: bash
+        run: ${{ inputs.extra }}
