@@ -46,9 +46,9 @@ Nombre de tests relevé dans les journaux de la CI de `main` :
 | Project-s-lab (privé) | verte, Linux seul (avec une série courte du netlab) | 7 | 0 | 0 |
 | Project-s-infra (privé) | verte : compose config ×4, helm lint, kubeconform, `systemd-analyze`, actionlint, gitleaks | — | — | — |
 | Project-s-docs | verte : liens, actionlint, Python | — | — | — |
-| Project-s, PR #9 | lint, deny et frontières verts ; tests : voir la note | local : 10 | 0 | 0 |
+| Project-s, PR #9 | verte (avec le `--check` du client) | 10 / 10 | 0 | 0 |
 
-**Note sur le client.** Les jobs de test de la PR #9 étaient encore en cours à la rédaction. Localement (sans `[patch]`, en `--locked`), 10 tests passent, dont 4 tests de bout en bout entre `ps-netclient` et `ps-server` sur UDP réel et sur un lien dégradé simulé. `Project-S --check` affiche « données valides (3 cartes, empreinte 2aa9cbf7b64f57f0) ».
+**Note sur le client.** Les 10 tests passent aussi en local (sans `[patch]`, en `--locked`), dont 4 tests de bout en bout entre `ps-netclient` et `ps-server` sur UDP réel et sur un lien dégradé simulé. `Project-S --check` affiche « données valides (3 cartes, empreinte 2aa9cbf7b64f57f0) ».
 
 **Total : 146 tests.** C'est plus que les 110 du baseline, pour deux raisons :
 - de nouveaux tests ont été ajoutés : contrats de `ps-core-protocol`, personnages de `ps-engine-character`, déterminisme du lab ;
@@ -130,13 +130,12 @@ Validé localement avec Docker 29.8.2 et Helm 3.18.3 :
 
 | Point | État |
 |---|---|
-| Tests du client en CI (PR #9) | en cours à la rédaction ; tests locaux réussis |
 | Client sous Linux | compilé en CI, jamais lancé |
 | Reconnexion à une partie en cours | champ `reconnect` présent dans `ClientMsg::Join` ; aucun test de bout en bout |
 | Kubernetes et Agones | jamais déployés (aucun cluster, aucune autorisation) |
 | Environnements development, staging et production | fichiers créés ; aucun hôte réel testé |
 | Déploiement VPS du nouveau découpage | non refait : seul le baseline 0.1.0-alpha a été validé sur VPS |
-| Image `ghcr.io/sforskill/project-s-server` | non publiée : `release.yml` du serveur ne pousse pas d'image ; l'infra utilise `--build` en attendant |
+| Image `ghcr.io/sforskill/project-s-server` | non publiée : job ajouté par SforSkill/Project-s-server#1 (CI verte, jamais exécuté avant une release) ; l'infra utilise `--build` en attendant |
 | Release Please du lab et de l'infra | échoue : l'App de release (variable `RELEASE_APP_ID`, secret `RELEASE_APP_PRIVATE_KEY`) n'est pas accessible aux dépôts privés ; aucun tag ; changement de droits non effectué |
 | Copie `ps-lab-netclient` dans le lab | dette : à remplacer par une dépendance `tag` vers `ps-netclient` quand le client sera tagué |
 | Core, orchestrateur, anti-triche, admin | **non implémentés** : périmètres ([docs/planned/](docs/planned/)) et contrats (`ps-core-protocol`) seulement |
